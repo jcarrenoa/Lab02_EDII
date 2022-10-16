@@ -106,16 +106,14 @@ public class Ventana extends javax.swing.JFrame {
 
         getContentPane().add(barra_p, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, -1));
 
-        scroll_p.setBorder(null);
-
         mapa_p.setBackground(new java.awt.Color(255, 251, 244));
         mapa_p.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+                mapa_pAncestorMoved(evt);
+            }
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-                mapa_pAncestorMoved(evt);
             }
         });
 
@@ -129,17 +127,26 @@ public class Ventana extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 desplegableMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                desplegableMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                desplegableMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                desplegableMousePressed(evt);
+            }
         });
 
         javax.swing.GroupLayout desplegable_pLayout = new javax.swing.GroupLayout(desplegable_p);
         desplegable_p.setLayout(desplegable_pLayout);
         desplegable_pLayout.setHorizontalGroup(
             desplegable_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desplegable, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+            .addComponent(desplegable, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
         );
         desplegable_pLayout.setVerticalGroup(
             desplegable_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desplegable, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+            .addComponent(desplegable, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
         );
 
         barrades_p.setBackground(new java.awt.Color(158, 118, 118));
@@ -219,7 +226,6 @@ public class Ventana extends javax.swing.JFrame {
     private void mapa_pAncestorMoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_mapa_pAncestorMoved
         xd = mapa_p.getX();
         yd = mapa_p.getY();
-        System.out.println(desplegable_p.getX());
         if (mostrar) {
             barrades_p.setSize(0, 709);
         }
@@ -231,6 +237,7 @@ public class Ventana extends javax.swing.JFrame {
     
     //Funcion para mostrar o esconder la barra desplegable
     private void desplegableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_desplegableMouseClicked
+        desplegable_p.setBackground(new Color(147, 110, 110));
         if (mostrar == false) {
             if (barrades_p.getWidth() == 153) {
                 barrades_p.setSize(153, 709);
@@ -282,6 +289,18 @@ public class Ventana extends javax.swing.JFrame {
     private void barra_pMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_barra_pMouseExited
         moved = false;
     }//GEN-LAST:event_barra_pMouseExited
+
+    private void desplegableMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_desplegableMouseEntered
+        desplegable_p.setBackground(new Color(147, 110, 110));
+    }//GEN-LAST:event_desplegableMouseEntered
+
+    private void desplegableMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_desplegableMouseExited
+        desplegable_p.setBackground(new Color(158, 118, 118));
+    }//GEN-LAST:event_desplegableMouseExited
+
+    private void desplegableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_desplegableMousePressed
+        desplegable_p.setBackground(new Color(132, 99, 99));
+    }//GEN-LAST:event_desplegableMousePressed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
