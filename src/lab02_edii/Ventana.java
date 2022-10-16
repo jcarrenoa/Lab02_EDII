@@ -1,6 +1,7 @@
 package lab02_edii;
 
 import java.awt.Color;
+import javax.swing.JScrollBar;
 
 public class Ventana extends javax.swing.JFrame {
 
@@ -15,6 +16,15 @@ public class Ventana extends javax.swing.JFrame {
 
     public Ventana() {
         initComponents();
+        getContentPane().setBackground(Color.WHITE);
+        ScrollBarModificado spv = new ScrollBarModificado();
+        spv.setOrientation(JScrollBar.VERTICAL);
+        spv.setForeground(new Color(158, 118, 118));
+        scroll_p.setVerticalScrollBar(spv);
+        ScrollBarModificado sph = new ScrollBarModificado();
+        sph.setOrientation(JScrollBar.HORIZONTAL);
+        sph.setForeground(new Color(158, 118, 118));
+        scroll_p.setHorizontalScrollBar(sph);
     }
 
     @SuppressWarnings("unchecked")
@@ -175,9 +185,9 @@ public class Ventana extends javax.swing.JFrame {
         mapa_pLayout.setVerticalGroup(
             mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mapa_pLayout.createSequentialGroup()
-                .addGroup(mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(barrades_p, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(desplegable_p, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(desplegable_p, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 333, Short.MAX_VALUE))
         );
 
