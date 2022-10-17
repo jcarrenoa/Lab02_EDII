@@ -1,7 +1,13 @@
 package lab02_edii;
 
+import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JScrollBar;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Ventana extends javax.swing.JFrame {
 
@@ -14,6 +20,14 @@ public class Ventana extends javax.swing.JFrame {
     //Variable que indica si se esta moviendo la ventana
     boolean moved = false;
 
+    boolean asignar_nombre = false;
+
+    Dibujado draw = new Dibujado();
+
+    Controller funciones = new Controller();
+
+    Grafo lugares = new Grafo();
+
     public Ventana() {
         initComponents();
         getContentPane().setBackground(Color.WHITE);
@@ -25,6 +39,7 @@ public class Ventana extends javax.swing.JFrame {
         sph.setOrientation(JScrollBar.HORIZONTAL);
         sph.setForeground(new Color(158, 118, 118));
         scroll_p.setHorizontalScrollBar(sph);
+        barrades_p.setSize(153, 709);
     }
 
     @SuppressWarnings("unchecked")
@@ -39,6 +54,7 @@ public class Ventana extends javax.swing.JFrame {
         desplegable_p = new javax.swing.JPanel();
         desplegable = new javax.swing.JLabel();
         barrades_p = new javax.swing.JPanel();
+        addv = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -126,6 +142,11 @@ public class Ventana extends javax.swing.JFrame {
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
+        mapa_p.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                mapa_pMousePressed(evt);
+            }
+        });
 
         desplegable_p.setBackground(new java.awt.Color(158, 118, 118));
 
@@ -160,35 +181,36 @@ public class Ventana extends javax.swing.JFrame {
         );
 
         barrades_p.setBackground(new java.awt.Color(158, 118, 118));
+        barrades_p.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout barrades_pLayout = new javax.swing.GroupLayout(barrades_p);
-        barrades_p.setLayout(barrades_pLayout);
-        barrades_pLayout.setHorizontalGroup(
-            barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 153, Short.MAX_VALUE)
-        );
-        barrades_pLayout.setVerticalGroup(
-            barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 709, Short.MAX_VALUE)
-        );
+        addv.setBackground(new java.awt.Color(158, 118, 118));
+        addv.setForeground(new java.awt.Color(255, 255, 255));
+        addv.setText("Agregar vertices");
+        addv.setBorder(null);
+        addv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addvActionPerformed(evt);
+            }
+        });
+        barrades_p.add(addv, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 640, -1, -1));
 
         javax.swing.GroupLayout mapa_pLayout = new javax.swing.GroupLayout(mapa_p);
         mapa_p.setLayout(mapa_pLayout);
         mapa_pLayout.setHorizontalGroup(
             mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mapa_pLayout.createSequentialGroup()
-                .addComponent(barrades_p, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(barrades_p, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(desplegable_p, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(1199, Short.MAX_VALUE))
+                .addContainerGap(1067, Short.MAX_VALUE))
         );
         mapa_pLayout.setVerticalGroup(
             mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mapa_pLayout.createSequentialGroup()
-                .addGroup(mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(barrades_p, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(desplegable_p, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 333, Short.MAX_VALUE))
+                .addGroup(mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(barrades_p, javax.swing.GroupLayout.PREFERRED_SIZE, 706, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(desplegable_p, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 141, Short.MAX_VALUE))
         );
 
         scroll_p.setViewportView(mapa_p);
@@ -244,13 +266,14 @@ public class Ventana extends javax.swing.JFrame {
             barrades_p.setLocation(barrades_p.getX() + -1 * xd, barrades_p.getY() + -1 * yd);
         }
     }//GEN-LAST:event_mapa_pAncestorMoved
-    
+
     //Funcion para mostrar o esconder la barra desplegable
     private void desplegableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_desplegableMouseClicked
         desplegable_p.setBackground(new Color(147, 110, 110));
+        System.out.println(mostrar);
         if (mostrar == false) {
+            System.out.println(mostrar);
             if (barrades_p.getWidth() == 153) {
-                barrades_p.setSize(153, 709);
                 Thread th = new Thread() {
                     @Override
                     public void run() {
@@ -260,7 +283,7 @@ public class Ventana extends javax.swing.JFrame {
                                 Thread.sleep(1 + (int) z);
                                 barrades_p.setSize(i, 709);
                                 if (z < 10) {
-                                    z = z * 1.014;
+                                    z = z * 1.015;
                                 }
                             }
                         } catch (InterruptedException e) {
@@ -272,6 +295,7 @@ public class Ventana extends javax.swing.JFrame {
                 mostrar = !mostrar;
             }
         } else {
+            System.out.println(mostrar);
             if (barrades_p.getWidth() == 0) {
                 Thread th = new Thread() {
                     @Override
@@ -282,7 +306,7 @@ public class Ventana extends javax.swing.JFrame {
                                 Thread.sleep(1 + (int) z);
                                 barrades_p.setSize(i, 709);
                                 if (z < 10) {
-                                    z = z * 1.014;
+                                    z = z * 1.015;
                                 }
                             }
                         } catch (InterruptedException e) {
@@ -312,15 +336,55 @@ public class Ventana extends javax.swing.JFrame {
         desplegable_p.setBackground(new Color(132, 99, 99));
     }//GEN-LAST:event_desplegableMousePressed
 
+    private void addvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addvActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addvActionPerformed
+
+    private void mapa_pMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapa_pMousePressed
+        if (addv.isSelected() && !asignar_nombre) {
+            int x = evt.getX();
+            int y = evt.getY();
+            Nombre ventana = new Nombre();
+            asignar_nombre = true;
+            ventana.setVisible(true);
+            ventana.setLocation(evt.getXOnScreen() - 349 / 2, evt.getYOnScreen() - 122 / 2);
+            Thread th = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        int i = 1;
+                        while (ventana.nombre.equals("")) {
+                            Thread.sleep(i);
+                        }
+                        funciones.Addv(x, y, ventana.nombre.toUpperCase(), lugares);
+                        draw.dibujarV(mapa_p.getGraphics(), ventana.nombre.toUpperCase(), x, y);
+                        barrades_p.repaint();
+                        asignar_nombre = false;
+
+                    } catch (InterruptedException e) {
+                        System.out.println(e);
+                    }
+                }
+            };
+            th.start();
+        }
+    }//GEN-LAST:event_mapa_pMousePressed
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                try {
+                    UIManager.setLookAndFeel(new WindowsLookAndFeel());
+                } catch (UnsupportedLookAndFeelException ex) {
+                    Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 new Ventana().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox addv;
     private javax.swing.JPanel barra_p;
     private javax.swing.JPanel barrades_p;
     private javax.swing.JLabel desplegable;

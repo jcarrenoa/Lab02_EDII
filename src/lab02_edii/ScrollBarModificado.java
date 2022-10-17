@@ -3,7 +3,6 @@ package lab02_edii;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JScrollBar;
-import lab02_edii.ScrollBarModernoUI;
 
 public class ScrollBarModificado extends JScrollBar{
     
