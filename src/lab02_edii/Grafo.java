@@ -18,4 +18,9 @@ public class Grafo {
         return vertices;
     }
     
+    public void addA(int costo, Vertices inicio, Vertices fin, int pos, int xi, int yi, int xf, int yf) {
+        Aristas a = new Aristas(costo, inicio, fin, xi, yi, xf, yf);
+        vertices[pos].addA(a);
+    }
+    
 }
