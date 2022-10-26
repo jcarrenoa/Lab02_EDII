@@ -3,13 +3,13 @@ package lab02_edii;
 import java.util.ArrayList;
 
 public class Vertices {
-    
+
     private final int x, y;
     private final int xi, yi, xf, yf;
     private final String nombre;
-    private final ArrayList<Aristas> aristas = new ArrayList<>();
-    
-    public Vertices (int x, int y, String nombre) {
+    private ArrayList<Aristas> aristas = new ArrayList<>();
+
+    public Vertices(int x, int y, String nombre) {
         int cade = 8 * nombre.length();
         this.x = x;
         this.y = y;
@@ -51,9 +51,18 @@ public class Vertices {
     public ArrayList<Aristas> getAristas() {
         return aristas;
     }
-    
+
     public void addA(Aristas a) {
         aristas.add(a);
     }
-    
+
+    public void eliminarA(Vertices v) {
+        for (int i = 0; i < getAristas().size(); i++) {
+            Aristas arista = getAristas().get(i);
+            if (arista.getFin() == v) {
+                aristas.remove(arista);
+            }
+        }
+    }
+
 }

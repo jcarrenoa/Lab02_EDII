@@ -9,6 +9,15 @@ public class Controller {
         g.addV(aux);
     }
     
+    public String[] lugares_n(int n, Vertices vec[]) {
+        String vec_lug[] = new String [n + 1];
+        vec_lug[0] = "";
+        for (int i = 0; i < n; i++) {
+            vec_lug[i + 1] = vec[i].getNombre();
+        }
+        return vec_lug;
+    }
+    
     public void mostrarf(int n, Vertices v[]) {
         Object[] res = floyd(n, v);  //ejecucion de la funcion
         int[][] res1 = (int[][]) res[0]; //Matriz de costos
@@ -45,7 +54,7 @@ public class Controller {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (i == j) {
-                    matVertices[j][i] = new Vertices(0, 0, "null"); //para prbar que hay queda nul
+                    matVertices[j][i] = new Vertices(0, 0, "---"); //para prbar que hay queda nul
                 } else {
                     matVertices[j][i] = vertices[i];
                 }

@@ -1,5 +1,6 @@
 package lab02_edii;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,27 +16,20 @@ public class Dibujado {
         this.draw = draw;
     }
 
-    public void dibujarV(String cadena, int x, int y) {
+    public void dibujarV(String cadena, int x, int y, Graphics draw) {
         int cade = 8 * cadena.length();
         draw.drawString(cadena, x - cade / 2, y + 20 / 4);
-        System.out.println("yi" + (y - 20 / 2));
-        System.out.println("yf" + 20);
         draw.drawRect((x - cade / 2) - 2 - cadena.length(), y - 20 / 2, 2 * cadena.length() + cade, 20);
     }
 
-    public void dibujarA(int xi, int yi, int xf, int yf, Vertices vertices[], int tope) {
-        Thread th = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(2);
-                    draw.drawLine(xi, yi, xf, yf);
+    public void dibujarV(String cadena, int x, int y) {
+        int cade = 8 * cadena.length();
+        draw.drawString(cadena, x - cade / 2, y + 20 / 4);
+        draw.drawRect((x - cade / 2) - 2 - cadena.length(), y - 20 / 2, 2 * cadena.length() + cade, 20);
+    }
 
-                } catch (InterruptedException ex) {
-                }
-            }
-        };
-        th.start();
+    public void dibujarA(int xi, int yi, int xf, int yf, Graphics draw) {
+        draw.drawLine(xi, yi, xf, yf);
     }
 
     public class RepeatedTask extends TimerTask {
@@ -56,39 +50,26 @@ public class Dibujado {
         }
     }
 
-    public void dibujarAllV(Vertices vertices[], int tope) {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(5);
-                    for (int i = 0; i < tope; i++) {
-                        dibujarV(vertices[i].getNombre(), vertices[i].getX(), vertices[i].getY());
-                    }
-                } catch (InterruptedException ex) {
-                }
-            }
-        }.start();
+    public void dibujarAllV(Vertices vertices[], int tope, Graphics draw) {
+        for (int i = 0; i < tope; i++) {
+            dibujarV(vertices[i].getNombre(), vertices[i].getX(), vertices[i].getY(), draw);
+        }
     }
 
-    public void dibujarAllA(Vertices vertices[], int tope) {
-        Thread th = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(5);
-                    for (int i = 0; i < tope; i++) {
-                        System.out.println("X: " + vertices[i].getXi());
-                        for (Aristas arista : vertices[i].getAristas()) {
-                            draw.drawLine(arista.getXi(), arista.getYi(), arista.getXf(), arista.getYf());
-                        }
-                    }
-                    timer.schedule(new RepeatedTask(tope, vertices), 1);
-                } catch (InterruptedException ex) {
-                }
+    public void dibujarAllA(Vertices vertices[], int tope, Graphics draw) {
+        for (int i = 0; i < tope; i++) {
+            for (Aristas arista : vertices[i].getAristas()) {
+                draw.drawString(String.valueOf(arista.getCosto()), 20 + (arista.getXi() + arista.getXf())/2, (arista.getYi() + arista.getYf())/2);
+                draw.drawLine(arista.getXi(), arista.getYi(), arista.getXf(), arista.getYf());
             }
-        };
-        th.start();
+        }
     }
-
+    
+    public void dibujarEliminacion (Vertices v, Graphics draw) {
+        draw.setColor(Color.RED);
+        dibujarV(v.getNombre(), v.getX(), v.getY(), draw);
+        for (Aristas a : v.getAristas()) {
+            dibujarA(a.getXi(), a.getYi(), a.getXf(), a.getYf(), draw);
+        }
+    }
 }

@@ -168,7 +168,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Nombre de la ubicacion"/>
+            <Property name="text" type="java.lang.String" value="Costo entre los dos lugares"/>
           </Properties>
         </Component>
       </SubComponents>

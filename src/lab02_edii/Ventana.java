@@ -2,6 +2,8 @@ package lab02_edii;
 
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import java.awt.Color;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JScrollBar;
@@ -42,6 +44,8 @@ public class Ventana extends javax.swing.JFrame {
 
     Grafo lugares = new Grafo();
 
+    Timer timer = new Timer();
+
     public Ventana() {
         initComponents();
         getContentPane().setBackground(Color.WHITE);
@@ -55,6 +59,7 @@ public class Ventana extends javax.swing.JFrame {
         scroll_p.setHorizontalScrollBar(sph);
         barrades_p.setSize(153, 709);
         this.draw = new Dibujado(mapa_p.getGraphics());
+        setLocationRelativeTo(null);
     }
 
     @SuppressWarnings("unchecked")
@@ -73,6 +78,9 @@ public class Ventana extends javax.swing.JFrame {
         addv = new javax.swing.JCheckBox();
         adda = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
+        eliminarv = new javax.swing.JCheckBox();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -160,13 +168,15 @@ public class Ventana extends javax.swing.JFrame {
         getContentPane().add(barra_p, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 30));
 
         mapa_p.setBackground(new java.awt.Color(255, 251, 244));
+        mapa_p.setMinimumSize(new java.awt.Dimension(1500, 1500));
+        mapa_p.setPreferredSize(new java.awt.Dimension(1500, 1500));
         mapa_p.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+                mapa_pAncestorMoved(evt);
+            }
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-                mapa_pAncestorMoved(evt);
             }
         });
         mapa_p.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -179,6 +189,7 @@ public class Ventana extends javax.swing.JFrame {
                 mapa_pMousePressed(evt);
             }
         });
+        mapa_p.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         desplegable_p.setBackground(new java.awt.Color(158, 118, 118));
 
@@ -212,8 +223,9 @@ public class Ventana extends javax.swing.JFrame {
             .addComponent(desplegable, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
         );
 
+        mapa_p.add(desplegable_p, new org.netbeans.lib.awtextra.AbsoluteConstraints(159, 0, -1, -1));
+
         barrades_p.setBackground(new java.awt.Color(158, 118, 118));
-        barrades_p.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         addv.setBackground(new java.awt.Color(158, 118, 118));
         addv.setForeground(new java.awt.Color(255, 255, 255));
@@ -224,38 +236,66 @@ public class Ventana extends javax.swing.JFrame {
                 addvActionPerformed(evt);
             }
         });
-        barrades_p.add(addv, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 640, -1, -1));
 
+        adda.setBackground(new java.awt.Color(158, 118, 118));
         adda.setForeground(new java.awt.Color(255, 255, 255));
         adda.setText("Agregar Arista");
-        barrades_p.add(adda, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 610, -1, -1));
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Mostrar tablas");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        barrades_p.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 560, -1, -1));
 
-        javax.swing.GroupLayout mapa_pLayout = new javax.swing.GroupLayout(mapa_p);
-        mapa_p.setLayout(mapa_pLayout);
-        mapa_pLayout.setHorizontalGroup(
-            mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mapa_pLayout.createSequentialGroup()
-                .addComponent(barrades_p, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+        eliminarv.setBackground(new java.awt.Color(158, 118, 118));
+        eliminarv.setForeground(new java.awt.Color(255, 255, 255));
+        eliminarv.setText("Eliminar vertice");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Eliminacion:");
+
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Vertice:");
+
+        javax.swing.GroupLayout barrades_pLayout = new javax.swing.GroupLayout(barrades_p);
+        barrades_p.setLayout(barrades_pLayout);
+        barrades_pLayout.setHorizontalGroup(
+            barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(barrades_pLayout.createSequentialGroup()
+                .addGroup(barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(barrades_pLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(adda)
+                            .addComponent(eliminarv)))
+                    .addGroup(barrades_pLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(addv)))
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
+        barrades_pLayout.setVerticalGroup(
+            barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(barrades_pLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(desplegable_p, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(1292, Short.MAX_VALUE))
+                .addComponent(jLabel3)
+                .addGap(510, 510, 510)
+                .addComponent(eliminarv)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(adda)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addv)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        mapa_pLayout.setVerticalGroup(
-            mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mapa_pLayout.createSequentialGroup()
-                .addGroup(mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(barrades_p, javax.swing.GroupLayout.PREFERRED_SIZE, 706, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(desplegable_p, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 794, Short.MAX_VALUE))
-        );
+
+        mapa_p.add(barrades_p, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 153, 706));
 
         scroll_p.setViewportView(mapa_p);
 
@@ -302,8 +342,8 @@ public class Ventana extends javax.swing.JFrame {
     private void mapa_pAncestorMoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_mapa_pAncestorMoved
         xd = mapa_p.getX();
         yd = mapa_p.getY();
-        mapa_p.repaint();
-        draw.dibujarAllV(lugares.getVertices(), lugares.getTope());
+        draw.dibujarAllV(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
+        draw.dibujarAllA(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
         if (mostrar) {
             barrades_p.setSize(0, 709);
         }
@@ -416,10 +456,10 @@ public class Ventana extends javax.swing.JFrame {
             };
             th.start();
         } else if (adda.isSelected()) {
+            Vertices vertices[] = lugares.getVertices();
             if (!click_a && !ponerA) {
                 int i = 0;
                 boolean aux = true;
-                Vertices vertices[] = lugares.getVertices();
                 while (i < lugares.getTope() && aux) {
                     if (vertices[i].getYi() < evt.getY() && vertices[i].getYf() > evt.getY()) {
                         if (vertices[i].getXi() < evt.getX() && vertices[i].getXf() > evt.getX()) {
@@ -440,7 +480,6 @@ public class Ventana extends javax.swing.JFrame {
             } else if (!ponerA) {
                 int i = 0;
                 boolean aux = true;
-                Vertices vertices[] = lugares.getVertices();
                 while (i < lugares.getTope() && aux) {
                     if (vertices[i].getYi() < evt.getY() && vertices[i].getYf() > evt.getY()) {
                         if (vertices[i].getXi() < evt.getX() && vertices[i].getXf() > evt.getX()) {
@@ -459,83 +498,128 @@ public class Ventana extends javax.swing.JFrame {
                     yi = 0;
                     inicio = null;
                     posi = 0;
-                    mapa_p.repaint();
-                    Thread th = new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(1);
-                                Vertices vertices[] = lugares.getVertices();
-                                draw.dibujarAllA(vertices, lugares.getTope());
-                                barrades_p.repaint();
-                                asignar_nombre = false;
-                                Thread.sleep(2);
-                                funciones.mensaje_e(fallos);
-                            } catch (InterruptedException e) {
-                                System.out.println(e);
-                            }
-                        }
-                    };
-                    th.start();
+                    barrades_p.repaint();
+                    asignar_nombre = false;
+                    funciones.mensaje_e(fallos);
                 } else if (fin == inicio) {
 
                 } else {
                     Costo ventana = new Costo();
                     ventana.setVisible(true);
                     ponerA = !ponerA;
-                    Thread th = new Thread() {
+                    new Thread() {
                         @Override
                         public void run() {
-                            try {
-                                int i = 1;
-                                while (ventana.costo == 0) {
-                                    Thread.sleep(i);
-                                }
-                                mapa_p.repaint();
-                                Thread.sleep(5);
-                                lugares.addA(ventana.costo, inicio, fin, posi, xi, yi, evt.getX(), evt.getY());
-                                lugares.addA(ventana.costo, fin, inicio, posf, xi, yi, evt.getX(), evt.getY());
-                                draw.dibujarAllA(lugares.getVertices(), lugares.getTope());
-                                ponerA = !ponerA;
-                            } catch (InterruptedException e) {
-                                System.out.println(e);
+                            while (ventana.costo == 0) {
+                                System.out.println("");
                             }
+                            if (vertices[posf].getXi() > vertices[posi].getXf()) {
+                                if (vertices[posf].getYi() < vertices[posi].getYf()) {
+                                    lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXf(), vertices[posi].getYi(), vertices[posf].getXi(), vertices[posf].getYf());
+                                    lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXf(), vertices[posi].getYi(), vertices[posf].getXi(), vertices[posf].getYf());
+                                } else {
+                                    lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXf(), vertices[posi].getYf(), vertices[posf].getXi(), vertices[posf].getYi());
+                                    lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXf(), vertices[posi].getYf(), vertices[posf].getXi(), vertices[posf].getYi());
+                                }
+                            } else {
+                                if (vertices[posf].getYi() < vertices[posi].getYf()) {
+                                    lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXi(), vertices[posi].getYi(), vertices[posf].getXf(), vertices[posf].getYf());
+                                    lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXi(), vertices[posi].getYi(), vertices[posf].getXf(), vertices[posf].getYf());
+                                } else {
+                                    lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXi(), vertices[posi].getYf(), vertices[posf].getXf(), vertices[posf].getYi());
+                                    lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXi(), vertices[posi].getYf(), vertices[posf].getXf(), vertices[posf].getYi());
+                                }
+                            }
+                            mapa_p.repaint();
+                            timer.schedule(new RepeatedTask1(), 10);
+                            ponerA = !ponerA;
                         }
-                    };
-                    th.start();
-                    System.out.println(ventana.costo);
+                    }.start();
                     fallos = 0;
                 }
                 click_a = !click_a;
+            }
+        } else if (eliminarv.isSelected()) {
+            Vertices vertices[] = lugares.getVertices();
+            boolean aux = false;
+            int i = 0;
+            while (i < lugares.getTope() && !aux) {
+                if (vertices[i].getYi() < evt.getY() && vertices[i].getYf() > evt.getY()) {
+                    if (vertices[i].getXi() < evt.getX() && vertices[i].getXf() > evt.getX()) {
+                        aux = true;
+                    }
+                }
+                i++;
+            }
+            if (aux) {
+                timer.schedule(new RepeatedTask2(vertices[i - 1]), 1);
+                lugares.eliminarV(i - 1);
+                timer.schedule(new CleanTimer(), 975);
+                timer.schedule(new RepeatedTask1(), 1000);
             }
         }
     }//GEN-LAST:event_mapa_pMousePressed
 
     private void mapa_pMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapa_pMouseMoved
-        if (click_a) {
-            if (val) {
-                val = false;
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            mapa_p.repaint();
-                            Thread.sleep(1);
-                            draw.dibujarA(xi, yi, evt.getX(), evt.getY(), lugares.getVertices(), lugares.getTope());
-                            draw.dibujarAllA(lugares.getVertices(), lugares.getTope());
-                            Thread.sleep(40);
-                            val = true;
-                        } catch (InterruptedException ex) {
-                        }
-                    }
-                }.start();
-            }
-        }
+//        if (click_a) {
+//            mapa_p.repaint();
+//            timer.schedule(new RepeatedTask(evt.getX(), evt.getY()), 20);
+//        }
     }//GEN-LAST:event_mapa_pMouseMoved
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         funciones.mostrarf(lugares.getTope(), lugares.getVertices());
+        Tablas tb = new Tablas(funciones.lugares_n(lugares.getTope(), lugares.getVertices()));
+        tb.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    public class RepeatedTask extends TimerTask {
+
+        int xf, yf;
+
+        public RepeatedTask(int x, int y) {
+            xf = x;
+            yf = y;
+        }
+
+        @Override
+        public void run() {
+            draw.dibujarAllV(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
+            draw.dibujarAllA(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
+            draw.dibujarA(xi, yi, xf, yf, mapa_p.getGraphics());
+        }
+    }
+
+    public class RepeatedTask1 extends TimerTask {
+
+        @Override
+        public void run() {
+            draw.dibujarAllV(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
+            draw.dibujarAllA(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
+        }
+    }
+
+    public class RepeatedTask2 extends TimerTask {
+
+        Vertices v;
+
+        public RepeatedTask2(Vertices v) {
+            this.v = v;
+        }
+
+        @Override
+        public void run() {
+            draw.dibujarEliminacion(v, mapa_p.getGraphics());
+        }
+    }
+
+    public class CleanTimer extends TimerTask {
+
+        @Override
+        public void run() {
+            mapa_p.repaint();
+        }
+    }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -557,10 +641,13 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JPanel barrades_p;
     private javax.swing.JLabel desplegable;
     private javax.swing.JPanel desplegable_p;
+    private javax.swing.JCheckBox eliminarv;
     private javax.swing.JLabel exit;
     private javax.swing.JPanel exit_p;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel mapa_p;
     private javax.swing.JScrollPane scroll_p;
     // End of variables declaration//GEN-END:variables

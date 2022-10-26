@@ -18,6 +18,7 @@ public class Costo extends javax.swing.JFrame {
     
     public Costo() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -120,7 +121,7 @@ public class Costo extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Nombre de la ubicacion");
+        jLabel1.setText("Costo entre los dos lugares");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
