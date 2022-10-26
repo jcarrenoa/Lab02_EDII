@@ -439,13 +439,20 @@ public class Ventana extends javax.swing.JFrame {
             ventana.setLocation(evt.getXOnScreen() - 349 / 2, evt.getYOnScreen() - 122 / 2);
             Vertices[] vert = lugares.getVertices();
             boolean canDraw = false;
-            for (Vertices vert1 : vert) {
-                if((x>=vert1.getLimXi())&&(x<=vert1.getLimXf())&&(y<=vert1.getLimYf())&&(y>=vert1.getLimYi())){
-                    break; //Esta dentro de los límites, por lo que no se dibuja
-                } else {
+            try {
+                for (Vertices vert1 : vert) {
+                    if ((x >= vert1.getLimXi()) && (x <= vert1.getLimXf()) && (y <= vert1.getLimYf()) && (y >= vert1.getLimYi())) {
+                        break; //Esta dentro de los límites, por lo que no se dibuja
+                    } else {
+                        canDraw = true;
+                    }
+                }
+            } catch (java.lang.NullPointerException e) {
+                if (lugares.getTope() == 0) {
                     canDraw = true;
                 }
             }
+
             if (canDraw) {
 
                 Thread th = new Thread() {
@@ -468,7 +475,7 @@ public class Ventana extends javax.swing.JFrame {
                 };
                 th.start();
             } else {
-                JOptionPane.showMessageDialog(this, "La posicion del mouse esta muy cerca a\nun vertice, por favor escoja otra posicion", "Error: posible solapamiento de vertices", JOptionPane.ERROR);
+                JOptionPane.showMessageDialog(this, "La posicion del mouse esta muy cerca a\nun vertice, por favor escoja otra posicion", "Error: posible solapamiento de vertices", 1);
             }
 
         } else if (adda.isSelected()) {
