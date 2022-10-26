@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -436,25 +437,40 @@ public class Ventana extends javax.swing.JFrame {
             asignar_nombre = true;
             ventana.setVisible(true);
             ventana.setLocation(evt.getXOnScreen() - 349 / 2, evt.getYOnScreen() - 122 / 2);
-            Thread th = new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        int i = 1;
-                        while (ventana.nombre.equals("")) {
-                            Thread.sleep(i);
-                        }
-                        funciones.Addv(x, y, ventana.nombre.toUpperCase(), lugares);
-                        draw.dibujarV(ventana.nombre.toUpperCase(), x, y, mapa_p.getGraphics());
-                        barrades_p.repaint();
-                        asignar_nombre = false;
-
-                    } catch (InterruptedException e) {
-                        System.out.println(e);
-                    }
+            Vertices[] vert = lugares.getVertices();
+            boolean canDraw = false;
+            for (Vertices vert1 : vert) {
+                if((x>=vert1.getLimXi())&&(x<=vert1.getLimXf())&&(y<=vert1.getLimYf())&&(y>=vert1.getLimYi())){
+                    break; //Esta dentro de los límites, por lo que no se dibuja
+                } else {
+                    canDraw = true;
                 }
-            };
-            th.start();
+            }
+            if (canDraw) {
+
+                Thread th = new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            int i = 1;
+                            while (ventana.nombre.equals("")) {
+                                Thread.sleep(i);
+                            }
+                            funciones.Addv(x, y, ventana.nombre.toUpperCase(), lugares);
+                            draw.dibujarV(ventana.nombre.toUpperCase(), x, y, mapa_p.getGraphics());
+                            barrades_p.repaint();
+                            asignar_nombre = false;
+
+                        } catch (InterruptedException e) {
+                            System.out.println(e);
+                        }
+                    }
+                };
+                th.start();
+            } else {
+                JOptionPane.showMessageDialog(this, "La posicion del mouse esta muy cerca a\nun vertice, por favor escoja otra posicion", "Error: posible solapamiento de vertices", JOptionPane.ERROR);
+            }
+
         } else if (adda.isSelected()) {
             Vertices vertices[] = lugares.getVertices();
             if (!click_a && !ponerA) {
