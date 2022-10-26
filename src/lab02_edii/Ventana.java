@@ -445,7 +445,7 @@ public class Ventana extends javax.swing.JFrame {
                             Thread.sleep(i);
                         }
                         funciones.Addv(x, y, ventana.nombre.toUpperCase(), lugares);
-                        draw.dibujarV(ventana.nombre.toUpperCase(), x, y);
+                        draw.dibujarV(ventana.nombre.toUpperCase(), x, y, mapa_p.getGraphics());
                         barrades_p.repaint();
                         asignar_nombre = false;
 
@@ -569,7 +569,7 @@ public class Ventana extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         funciones.mostrarf(lugares.getTope(), lugares.getVertices());
-        Tablas tb = new Tablas(funciones.lugares_n(lugares.getTope(), lugares.getVertices()));
+        Tablas tb = new Tablas(funciones.lugares_n(lugares.getTope(), lugares.getVertices()), funciones.floyd(lugares.getTope(), lugares.getVertices()));
         tb.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -624,11 +624,6 @@ public class Ventana extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    UIManager.setLookAndFeel(new WindowsLookAndFeel());
-                } catch (UnsupportedLookAndFeelException ex) {
-                    Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
-                }
                 new Ventana().setVisible(true);
             }
         });

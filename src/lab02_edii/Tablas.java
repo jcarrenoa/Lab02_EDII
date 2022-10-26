@@ -15,7 +15,10 @@ public class Tablas extends javax.swing.JFrame {
 
     int xm, ym;
     boolean moved;
-    public Tablas(String nombres[]) {
+    int Mt_c[][];
+    Vertices Mt_v[][];
+    
+    public Tablas(String nombres[], Object[] Floyd) {
         initComponents();
         DefaultTableModel df = new DefaultTableModel(null, nombres);
         for (int i = 1; i < nombres.length; i++) {
@@ -25,6 +28,8 @@ public class Tablas extends javax.swing.JFrame {
         }
         costos_t.setModel(df);
         lugares_t.setModel(df);
+        Mt_c = (int[][]) Floyd[0];
+        Mt_v = (Vertices [][]) Floyd[1];
     }
 
     /**

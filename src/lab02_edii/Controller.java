@@ -42,7 +42,7 @@ public class Controller {
         }
     }
     
-    public static Object[] floyd(int n, Vertices[] vertices) { 
+    public Object[] floyd(int n, Vertices[] vertices) { 
         // La funcion es de tipy Object[] porque va a devolver un vector con las dos matrices dento (esa fue la unica forma que pense jasjajs)
         Object[] matrices = new Object[2];
         //n es el número de vertices dentro del grafo
