@@ -11,13 +11,14 @@ import javax.swing.JOptionPane;
  *
  * @author aaron
  */
-public class Nombre extends javax.swing.JFrame {
+public class Costo extends javax.swing.JFrame {
 
-    String nombre = "";
+    int costo = 0;
     int xm, ym;
     
-    public Nombre() {
+    public Costo() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -107,6 +108,11 @@ public class Nombre extends javax.swing.JFrame {
                 nombrelActionPerformed(evt);
             }
         });
+        nombrel.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nombrelKeyTyped(evt);
+            }
+        });
 
         agregarn.setText("Agregar");
         agregarn.addActionListener(new java.awt.event.ActionListener() {
@@ -115,7 +121,7 @@ public class Nombre extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Nombre de la ubicacion");
+        jLabel1.setText("Costo entre los dos lugares");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -168,7 +174,7 @@ public class Nombre extends javax.swing.JFrame {
         if (nombrel.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Por favor, ingrese un valor valido", "VALOR INVALIDO" , 0);
         } else {
-            nombre = nombrel.getText();
+            costo = Integer.parseInt(nombrel.getText());
             this.setVisible(false);
         }
     }//GEN-LAST:event_agregarnActionPerformed
@@ -200,6 +206,14 @@ public class Nombre extends javax.swing.JFrame {
     private void jLabel2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MousePressed
         salir_p.setBackground(new Color(201, 0, 0));
     }//GEN-LAST:event_jLabel2MousePressed
+
+    private void nombrelKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nombrelKeyTyped
+        char validar = evt.getKeyChar();
+        if (Character.isLetter(validar)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_nombrelKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarn;
