@@ -26,7 +26,6 @@ public class Grafo {
     public void eliminarV(int n) {
         Vertices v = vertices[n];
         vertices[n] = null;
-        System.out.println(v.getNombre());
         for (int i = n; i < tope; i++) {
             if ((i + 1) < tope) {
                 vertices[i] = vertices[i + 1];

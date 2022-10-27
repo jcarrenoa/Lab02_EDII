@@ -2,12 +2,14 @@ package lab02_edii;
 
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.UIManager;
@@ -15,6 +17,21 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class Ventana extends javax.swing.JFrame {
 
+    public class Imagenes extends javax.swing.JPanel {
+
+        public Imagenes() {
+            this.setSize(1500, 1500);
+        }
+
+        @Override
+        public void paint(Graphics grafico) {
+            Dimension height = getSize();
+            ImageIcon Img = new ImageIcon(getClass().getResource("/Imagenes/MiddleMapa-38.png"));
+            grafico.drawImage(Img.getImage(), 0, 0, height.width, height.height, null);
+            setOpaque(false);
+            super.paintComponent(grafico);
+        }
+    }
     //Variables que permiten rodar la ventana.
     int xm, ym;
     //Variables que permiten rodar la barra desplegable en el jScrollPanel
@@ -41,6 +58,8 @@ public class Ventana extends javax.swing.JFrame {
     //Variable que permite confirmar si se esta clickeando para ingresar una arista
     boolean click_a = false;
 
+    boolean pintar_c = false;
+
     boolean val = true;
 
     Dibujado draw;
@@ -56,6 +75,9 @@ public class Ventana extends javax.swing.JFrame {
     public Ventana() {
         initComponents();
         getContentPane().setBackground(Color.WHITE);
+        Imagenes imagenes = new Imagenes();
+        mapa_p.add(imagenes);
+        mapa_p.repaint();
         ScrollBarModificado spv = new ScrollBarModificado();
         spv.setOrientation(JScrollBar.VERTICAL);
         spv.setForeground(new Color(158, 118, 118));
@@ -64,8 +86,10 @@ public class Ventana extends javax.swing.JFrame {
         sph.setOrientation(JScrollBar.HORIZONTAL);
         sph.setForeground(new Color(158, 118, 118));
         scroll_p.setHorizontalScrollBar(sph);
-        barrades_p.setSize(153, 709);
+        barrades_p.repaint();
+        desplegable_p.repaint();
         this.draw = new Dibujado(mapa_p.getGraphics());
+        barrades_p.setSize(153, 709);
         setLocationRelativeTo(null);
     }
 
@@ -92,6 +116,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         camino_b = new javax.swing.JButton();
+        limpiar_b = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -203,7 +228,6 @@ public class Ventana extends javax.swing.JFrame {
                 mapa_pMousePressed(evt);
             }
         });
-        mapa_p.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         desplegable_p.setBackground(new java.awt.Color(158, 118, 118));
 
@@ -237,9 +261,8 @@ public class Ventana extends javax.swing.JFrame {
             .addComponent(desplegable, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
         );
 
-        mapa_p.add(desplegable_p, new org.netbeans.lib.awtextra.AbsoluteConstraints(159, 0, -1, -1));
-
         barrades_p.setBackground(new java.awt.Color(158, 118, 118));
+        barrades_p.setPreferredSize(new java.awt.Dimension(153, 721));
         barrades_p.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 barrades_pMouseEntered(evt);
@@ -310,6 +333,13 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
 
+        limpiar_b.setText("Limpiar");
+        limpiar_b.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                limpiar_bActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout barrades_pLayout = new javax.swing.GroupLayout(barrades_p);
         barrades_p.setLayout(barrades_pLayout);
         barrades_pLayout.setHorizontalGroup(
@@ -317,31 +347,24 @@ public class Ventana extends javax.swing.JFrame {
             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(barrades_pLayout.createSequentialGroup()
                 .addGroup(barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(barrades_pLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2)
-                                .addComponent(adda)
-                                .addComponent(eliminarv)))
-                        .addGroup(barrades_pLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel3))
-                        .addGroup(barrades_pLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel4))
-                        .addGroup(barrades_pLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(fin_c, 0, 132, Short.MAX_VALUE))
-                        .addGroup(barrades_pLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(ini_c, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(barrades_pLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(camino_b))
+                        .addGroup(barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel2)
+                            .addComponent(adda)
+                            .addComponent(eliminarv)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(fin_c, 0, 132, Short.MAX_VALUE)
+                            .addComponent(ini_c, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(barrades_pLayout.createSequentialGroup()
                         .addGap(14, 14, 14)
-                        .addComponent(addv)))
+                        .addComponent(addv))
+                    .addGroup(barrades_pLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(limpiar_b, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(camino_b, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
         barrades_pLayout.setVerticalGroup(
@@ -359,17 +382,36 @@ public class Ventana extends javax.swing.JFrame {
                 .addComponent(fin_c, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(camino_b)
-                .addGap(332, 332, 332)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(limpiar_b)
+                .addGap(304, 304, 304)
                 .addComponent(eliminarv)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(adda)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addv)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        mapa_p.add(barrades_p, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 153, 706));
+        javax.swing.GroupLayout mapa_pLayout = new javax.swing.GroupLayout(mapa_p);
+        mapa_p.setLayout(mapa_pLayout);
+        mapa_pLayout.setHorizontalGroup(
+            mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mapa_pLayout.createSequentialGroup()
+                .addComponent(barrades_p, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(desplegable_p, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        mapa_pLayout.setVerticalGroup(
+            mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mapa_pLayout.createSequentialGroup()
+                .addGroup(mapa_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(desplegable_p, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(barrades_p, javax.swing.GroupLayout.PREFERRED_SIZE, 708, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(792, 792, 792))
+        );
 
         scroll_p.setViewportView(mapa_p);
 
@@ -416,8 +458,14 @@ public class Ventana extends javax.swing.JFrame {
     private void mapa_pAncestorMoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_mapa_pAncestorMoved
         xd = mapa_p.getX();
         yd = mapa_p.getY();
-        draw.dibujarAllV(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
-        draw.dibujarAllA(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
+        if (pintar_c) {
+            mapa_p.repaint();
+            timer.schedule(new RepeatedTask1(), 5);
+            pintar_c = false;
+        } else {
+            draw.dibujarAllV(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
+            draw.dibujarAllA(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
+        }
         if (mostrar) {
             barrades_p.setSize(0, 709);
         }
@@ -434,7 +482,6 @@ public class Ventana extends javax.swing.JFrame {
         desplegable_p.setBackground(new Color(147, 110, 110));
         System.out.println(mostrar);
         if (mostrar == false) {
-            System.out.println(mostrar);
             if (barrades_p.getWidth() == 153) {
                 Thread th = new Thread() {
                     @Override
@@ -457,7 +504,6 @@ public class Ventana extends javax.swing.JFrame {
                 mostrar = !mostrar;
             }
         } else {
-            System.out.println(mostrar);
             if (barrades_p.getWidth() == 0) {
                 Thread th = new Thread() {
                     @Override
@@ -503,7 +549,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_addvActionPerformed
 
     private void mapa_pMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapa_pMousePressed
-        
+
     }//GEN-LAST:event_mapa_pMousePressed
 
     private void mapa_pMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapa_pMouseMoved
@@ -592,6 +638,14 @@ public class Ventana extends javax.swing.JFrame {
                                     canDraw = true;
                                 }
                             }
+                            int z = 0;
+                            while (z < lugares.getTope() && canDraw) {
+                                if (prueba.getNombre().equals(vert[z].getNombre())) {
+                                    JOptionPane.showMessageDialog(null, "No se puede agregar un lugar con el mismo nombre. Intenta nuevamente", "LUGARES CON EL MISMO NOMBRE", 1);
+                                    canDraw = false;
+                                }
+                                z++;
+                            }
                             if (canDraw) {
                                 funciones.Addv(x, y, ventana.nombre.toUpperCase(), lugares);
                                 ini_c.addItem(ventana.nombre.toUpperCase());
@@ -600,14 +654,12 @@ public class Ventana extends javax.swing.JFrame {
                             }
                             barrades_p.repaint();
                             asignar_nombre = false;
-
                         } catch (InterruptedException e) {
                             System.out.println(e);
                         }
                     }
                 };
                 th.start();
-
             } else if (adda.isSelected()) {
                 Vertices vertices[] = lugares.getVertices();
                 if (!click_a && !ponerA) {
@@ -646,13 +698,21 @@ public class Ventana extends javax.swing.JFrame {
                         }
                         i++;
                     }
+                    if (!aux) {
+                        for (Aristas a : inicio.getAristas()) {
+                            if (a.getFin() == fin) {
+                                fin = inicio;
+                                break;
+                            }
+                        }
+                    }
                     if (aux) {
                         fallos++;
                         xi = 0;
                         yi = 0;
                         inicio = null;
                         posi = 0;
-                        barrades_p.repaint();
+                        timer.schedule(new RepeatedTask1(), 1);
                         asignar_nombre = false;
                         funciones.mensaje_e(fallos);
                     } else if (fin == inicio) {
@@ -690,7 +750,7 @@ public class Ventana extends javax.swing.JFrame {
                                     }
                                 }
                                 mapa_p.repaint();
-                                timer.schedule(new RepeatedTask1(), 10);
+                                timer.schedule(new RepeatedTask1(), 40);
                                 ponerA = !ponerA;
                             }
                         }.start();
@@ -725,12 +785,18 @@ public class Ventana extends javax.swing.JFrame {
     private void camino_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_camino_bActionPerformed
         if (!ini_c.getSelectedItem().equals(" ") && !fin_c.getSelectedItem().equals(" ")) {
             Object mats[] = funciones.floyd(lugares.getTope(), lugares.getVertices());
-            ArrayList<Vertices> camino = funciones.caminoMin((int[][]) mats[0], (Vertices[][])mats[1], lugares.getTope(), lugares.getVertices(), funciones.encontrarV((String) ini_c.getSelectedItem(), lugares.getVertices()), funciones.encontrarV((String) fin_c.getSelectedItem(), lugares.getVertices()));
+            ArrayList<Vertices> camino = funciones.caminoMin((int[][]) mats[0], (Vertices[][]) mats[1], lugares.getTope(), lugares.getVertices(), funciones.encontrarV((String) ini_c.getSelectedItem(), lugares.getVertices()), funciones.encontrarV((String) fin_c.getSelectedItem(), lugares.getVertices()));
             draw.dibujarAllV(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
             draw.dibujarAllA(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
             draw.dibujarCamino(camino, mapa_p.getGraphics());
+            pintar_c = true;
         }
     }//GEN-LAST:event_camino_bActionPerformed
+
+    private void limpiar_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiar_bActionPerformed
+        mapa_p.repaint();
+        timer.schedule(new RepeatedTask1(), 40);
+    }//GEN-LAST:event_limpiar_bActionPerformed
 
     public class RepeatedTask extends TimerTask {
 
@@ -813,6 +879,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JButton limpiar_b;
     private javax.swing.JPanel mapa_p;
     private javax.swing.JScrollPane scroll_p;
     // End of variables declaration//GEN-END:variables

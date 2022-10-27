@@ -1,7 +1,9 @@
 package lab02_edii;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,7 +32,9 @@ public class Dibujado {
     }
 
     public void dibujarA(int xi, int yi, int xf, int yf, Graphics draw) {
-        draw.drawLine(xi, yi, xf, yf);
+        Graphics2D draw2d = (Graphics2D)draw;
+        draw2d.setStroke(new BasicStroke(3));
+        draw2d.drawLine(xi, yi, xf, yf);
     }
 
     public class RepeatedTask extends TimerTask {
@@ -70,7 +74,7 @@ public class Dibujado {
         draw.setColor(Color.RED);
         dibujarV(v.getNombre(), v.getX(), v.getY(), draw);
         for (Aristas a : v.getAristas()) {
-            dibujarA(a.getXi(), a.getYi(), a.getXf(), a.getYf(), draw);
+            draw.drawLine(a.getXi(), a.getYi(), a.getXf(), a.getYf());
         }
     }
     
@@ -92,7 +96,9 @@ public class Dibujado {
                 }
             }
             ant = va;
-            draw.setColor(Color.RED);
+            draw.setColor(Color.GREEN);
+            Graphics2D draw2d = (Graphics2D) draw;
+            draw2d.setStroke(new BasicStroke(1));
             dibujarV(va.getNombre(), va.getX(), va.getY(), draw);
         }
     }
