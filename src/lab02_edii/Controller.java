@@ -1,5 +1,6 @@
 package lab02_edii;
 
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class Controller {
@@ -16,6 +17,64 @@ public class Controller {
             vec_lug[i + 1] = vec[i].getNombre();
         }
         return vec_lug;
+    }
+    
+    public Vertices encontrarV (String lugar, Vertices[] v) {
+        Vertices enc = null;
+        boolean encontrado = false;
+        int i = 0;
+        while (!encontrado) {
+            if (v[i].getNombre().equals(lugar)) {
+                enc = v[i];
+                encontrado = true;
+            }
+            i++;
+        }
+        return enc;
+    }
+    
+    public ArrayList<Vertices> caminoMin(int[][] matCostos, Vertices[][] matVertices, int n, Vertices[] vertices, Vertices origen, Vertices destino) {
+        //Para dar el camino minimo usaré un arraylist y un vector para ir ingresando los vertices a los que debo ir primero antes de llegar a mi destino
+        ArrayList<Vertices> recorrido = new ArrayList<>();
+        ArrayList<Vertices> result = new ArrayList<>(); //arraylist con el recorrido en orden de origen a destino
+        int posiOrigen = -1, posiDestino = -1; //las posiciones del inicio y fin dentro del vector
+        int longitud = 0; //la longitud del camino
+        for (int i = 0; i < n; i++) {
+            if (origen == vertices[i]) {
+                posiOrigen = i;
+            }
+            if (destino == vertices[i]) {
+                posiDestino = i;
+
+            }
+        }
+        if (matCostos[posiOrigen][posiDestino] != -1) { //en el caso de que el no haya forma de ir de un al otro
+            if (posiOrigen != posiDestino) { //Si el origen y el destino es el mismo la longitud es cero, y no hay camino
+                do {
+                    Vertices pasarPor = matVertices[posiOrigen][posiDestino];
+                    recorrido.add(pasarPor);
+                    longitud++;
+                    //Se tiene que buscar la posicion del vertice por el que se tiene que pasar
+                    for (int i = 0; i < n; i++) {
+                        if (pasarPor == vertices[i]) {
+                            posiDestino = i;
+                        }
+                    }
+
+                } while (vertices[posiDestino] != matVertices[posiOrigen][posiDestino]);
+                result.add(origen); //Se agrega el origen
+                for (int i = recorrido.size() - 1; i >= 0; i--) { //Se pasan los vertices del otro arraylist
+                    result.add(recorrido.get(i));
+                }
+                result.add(destino); //se agrega el destino
+            } else {
+                JOptionPane.showMessageDialog(null, "No hay caminos, porque el origen y el destino son iguales", "VALOR INVALIDO" , 0);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay camino entre los vertices elegidos", "VALOR INVALIDO" , 0);
+        }
+
+        return result;
     }
     
     public void mostrarf(int n, Vertices v[]) {
@@ -112,7 +171,6 @@ public class Controller {
                 }
             }
         }
-
         matrices[0] = matCostos;
         matrices[1] = matVertices;
         return matrices;

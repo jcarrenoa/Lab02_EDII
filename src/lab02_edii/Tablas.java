@@ -17,19 +17,28 @@ public class Tablas extends javax.swing.JFrame {
     boolean moved;
     int Mt_c[][];
     Vertices Mt_v[][];
-    
-    public Tablas(String nombres[], Object[] Floyd) {
+
+    public Tablas(String nombres[], Object[] Floyd, int tope) {
         initComponents();
-        DefaultTableModel df = new DefaultTableModel(null, nombres);
+        setLocationRelativeTo(null);
+        DefaultTableModel dfc = new DefaultTableModel(null, nombres);
+        DefaultTableModel dfv = new DefaultTableModel(null, nombres);
         for (int i = 1; i < nombres.length; i++) {
             String vec[] = new String[nombres.length];
             vec[0] = nombres[i];
-            df.addRow(vec);
+            dfv.addRow(vec);
+            dfc.addRow(vec);
         }
-        costos_t.setModel(df);
-        lugares_t.setModel(df);
+        costos_t.setModel(dfc);
+        lugares_t.setModel(dfv);
         Mt_c = (int[][]) Floyd[0];
-        Mt_v = (Vertices [][]) Floyd[1];
+        Mt_v = (Vertices[][]) Floyd[1];
+        for (int i = 0; i < tope; i++) {
+            for (int j = 0; j < tope; j++) {
+                costos_t.setValueAt(Mt_c[i][j], i, j + 1);
+                lugares_t.setValueAt(Mt_v[i][j].getNombre(), i, j + 1);
+            }
+        }
     }
 
     /**

@@ -2,6 +2,7 @@ package lab02_edii;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -78,5 +79,21 @@ public class Dibujado {
         dibujarV(nombre, x, y, draw);
     }
             
-            
+    public void dibujarCamino (ArrayList<Vertices> v, Graphics draw) {
+        Vertices ant = null;
+        for (Vertices va : v) {
+            if (ant != null) {
+                for (Aristas a : va.getAristas()) {
+                    if (ant == a.getFin()) {
+                        draw.setColor(Color.GREEN);
+                        dibujarA(a.getXi(), a.getYi(), a.getXf(), a.getYf(), draw);
+                        break;
+                    }
+                }
+            }
+            ant = va;
+            draw.setColor(Color.RED);
+            dibujarV(va.getNombre(), va.getX(), va.getY(), draw);
+        }
+    }
 }

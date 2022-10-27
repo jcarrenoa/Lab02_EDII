@@ -3,6 +3,7 @@ package lab02_edii;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -50,6 +51,8 @@ public class Ventana extends javax.swing.JFrame {
 
     Timer timer = new Timer();
 
+    boolean entrar_b = false;
+
     public Ventana() {
         initComponents();
         getContentPane().setBackground(Color.WHITE);
@@ -84,7 +87,11 @@ public class Ventana extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         eliminarv = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
+        ini_c = new javax.swing.JComboBox<>();
+        fin_c = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        camino_b = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -189,6 +196,9 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
         mapa_p.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mapa_pMouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 mapa_pMousePressed(evt);
             }
@@ -230,6 +240,14 @@ public class Ventana extends javax.swing.JFrame {
         mapa_p.add(desplegable_p, new org.netbeans.lib.awtextra.AbsoluteConstraints(159, 0, -1, -1));
 
         barrades_p.setBackground(new java.awt.Color(158, 118, 118));
+        barrades_p.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                barrades_pMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                barrades_pMouseExited(evt);
+            }
+        });
 
         addv.setBackground(new java.awt.Color(158, 118, 118));
         addv.setForeground(new java.awt.Color(255, 255, 255));
@@ -273,10 +291,24 @@ public class Ventana extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Eliminacion:");
+        jLabel2.setText("Caminos Min:");
+
+        ini_c.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+
+        fin_c.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Vertice:");
+        jLabel3.setText("Inicio");
+
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Fin");
+
+        camino_b.setText("Ejecutar");
+        camino_b.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                camino_bActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout barrades_pLayout = new javax.swing.GroupLayout(barrades_p);
         barrades_p.setLayout(barrades_pLayout);
@@ -285,32 +317,55 @@ public class Ventana extends javax.swing.JFrame {
             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(barrades_pLayout.createSequentialGroup()
                 .addGroup(barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(barrades_pLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addComponent(adda)
+                                .addComponent(eliminarv)))
+                        .addGroup(barrades_pLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jLabel3))
+                        .addGroup(barrades_pLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jLabel4))
+                        .addGroup(barrades_pLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(fin_c, 0, 132, Short.MAX_VALUE))
+                        .addGroup(barrades_pLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(ini_c, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(barrades_pLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(adda)
-                            .addComponent(eliminarv)))
+                        .addComponent(camino_b))
                     .addGroup(barrades_pLayout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(addv)))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         barrades_pLayout.setVerticalGroup(
             barrades_pLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(barrades_pLayout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addGap(27, 27, 27)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(23, 23, 23)
                 .addComponent(jLabel3)
-                .addGap(510, 510, 510)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ini_c, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fin_c, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(camino_b)
+                .addGap(332, 332, 332)
                 .addComponent(eliminarv)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(adda)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addv)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -448,153 +503,7 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_addvActionPerformed
 
     private void mapa_pMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapa_pMousePressed
-        if (addv.isSelected() && !asignar_nombre) {
-            int x = evt.getX();
-            int y = evt.getY();
-            Vertices[] vert = lugares.getVertices();
-            boolean canDraw = false;
-            int z = 0;
-            if (lugares.getTope() == 0) {
-                canDraw = true;
-            }
-            while (!canDraw && z < lugares.getTope()) {
-                if ((x >= vert[z].getLimXi()) && (x <= vert[z].getLimXf()) && (y <= vert[z].getLimYf()) && (y >= vert[z].getLimYi())) {
-                } else {
-                    canDraw = true;
-                }
-                z++;
-            }
-            if (canDraw) {
-                Nombre ventana = new Nombre();
-                asignar_nombre = true;
-                ventana.setVisible(true);
-                ventana.setLocation(evt.getXOnScreen() - 349 / 2, evt.getYOnScreen() - 122 / 2);
-                Thread th = new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            int i = 1;
-                            while (ventana.nombre.equals("")) {
-                                Thread.sleep(i);
-                            }
-                            funciones.Addv(x, y, ventana.nombre.toUpperCase(), lugares);
-                            draw.dibujarV(ventana.nombre.toUpperCase(), x, y, mapa_p.getGraphics());
-                            barrades_p.repaint();
-                            asignar_nombre = false;
-                        } catch (InterruptedException e) {
-                            System.out.println(e);
-                        }
-                    }
-                };
-                th.start();
-            } else {
-                JOptionPane.showMessageDialog(this, "La posicion del mouse esta muy cerca a\nun vertice, por favor escoja otra posicion", "Error: posible solapamiento de vertices", 1);
-            }
-
-        } else if (adda.isSelected()) {
-            Vertices vertices[] = lugares.getVertices();
-            if (!click_a && !ponerA) {
-                int i = 0;
-                boolean aux = true;
-                while (i < lugares.getTope() && aux) {
-                    if (vertices[i].getYi() < evt.getY() && vertices[i].getYf() > evt.getY()) {
-                        if (vertices[i].getXi() < evt.getX() && vertices[i].getXf() > evt.getX()) {
-                            xi = evt.getX();
-                            yi = evt.getY();
-                            inicio = vertices[i];
-                            posi = i;
-                            click_a = !click_a;
-                            draw.dibujarVSelect(inicio.getNombre(), inicio.getX(), inicio.getY(), mapa_p.getGraphics());
-                            aux = false;
-                        }
-                    }
-                    i++;
-                }
-                if (aux) {
-                    fallos++;
-                    funciones.mensaje_e(fallos);
-                }
-            } else if (!ponerA) {
-                int i = 0;
-                boolean aux = true;
-                while (i < lugares.getTope() && aux) {
-                    if (vertices[i].getYi() < evt.getY() && vertices[i].getYf() > evt.getY()) {
-                        if (vertices[i].getXi() < evt.getX() && vertices[i].getXf() > evt.getX()) {
-                            xf = evt.getX();
-                            yf = evt.getY();
-                            fin = vertices[i];
-                            posf = i;
-                            aux = false;
-                        }
-                    }
-                    i++;
-                }
-                if (aux) {
-                    fallos++;
-                    xi = 0;
-                    yi = 0;
-                    inicio = null;
-                    posi = 0;
-                    barrades_p.repaint();
-                    asignar_nombre = false;
-                    funciones.mensaje_e(fallos);
-                } else if (fin == inicio) {
-
-                } else {
-                    Costo ventana = new Costo();
-                    ventana.setVisible(true);
-                    ponerA = !ponerA;
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            while (ventana.costo == 0) {
-                                System.out.println("");
-                            }
-                            if (vertices[posf].getXi() > vertices[posi].getXf()) {
-                                if (vertices[posf].getYi() < vertices[posi].getYf()) {
-                                    lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXf(), vertices[posi].getYi(), vertices[posf].getXi(), vertices[posf].getYf());
-                                    lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXf(), vertices[posi].getYi(), vertices[posf].getXi(), vertices[posf].getYf());
-                                } else {
-                                    lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXf(), vertices[posi].getYf(), vertices[posf].getXi(), vertices[posf].getYi());
-                                    lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXf(), vertices[posi].getYf(), vertices[posf].getXi(), vertices[posf].getYi());
-                                }
-                            } else {
-                                if (vertices[posf].getYi() < vertices[posi].getYf()) {
-                                    lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXi(), vertices[posi].getYi(), vertices[posf].getXf(), vertices[posf].getYf());
-                                    lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXi(), vertices[posi].getYi(), vertices[posf].getXf(), vertices[posf].getYf());
-                                } else {
-                                    lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXi(), vertices[posi].getYf(), vertices[posf].getXf(), vertices[posf].getYi());
-                                    lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXi(), vertices[posi].getYf(), vertices[posf].getXf(), vertices[posf].getYi());
-                                }
-                            }
-                            mapa_p.repaint();
-                            timer.schedule(new RepeatedTask1(), 10);
-                            ponerA = !ponerA;
-                        }
-                    }.start();
-                    fallos = 0;
-                }
-                click_a = !click_a;
-            }
-        } else if (eliminarv.isSelected()) {
-            Vertices vertices[] = lugares.getVertices();
-            boolean aux = false;
-            int i = 0;
-            while (i < lugares.getTope() && !aux) {
-                if (vertices[i].getYi() < evt.getY() && vertices[i].getYf() > evt.getY()) {
-                    if (vertices[i].getXi() < evt.getX() && vertices[i].getXf() > evt.getX()) {
-                        aux = true;
-                    }
-                }
-                i++;
-            }
-            if (aux) {
-                timer.schedule(new RepeatedTask2(vertices[i - 1]), 1);
-                lugares.eliminarV(i - 1);
-                timer.schedule(new CleanTimer(), 975);
-                timer.schedule(new RepeatedTask1(), 1000);
-            }
-        }
+        
     }//GEN-LAST:event_mapa_pMousePressed
 
     private void mapa_pMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapa_pMouseMoved
@@ -606,7 +515,7 @@ public class Ventana extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         funciones.mostrarf(lugares.getTope(), lugares.getVertices());
-        Tablas tb = new Tablas(funciones.lugares_n(lugares.getTope(), lugares.getVertices()), funciones.floyd(lugares.getTope(), lugares.getVertices()));
+        Tablas tb = new Tablas(funciones.lugares_n(lugares.getTope(), lugares.getVertices()), funciones.floyd(lugares.getTope(), lugares.getVertices()), lugares.getTope());
         tb.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -624,6 +533,204 @@ public class Ventana extends javax.swing.JFrame {
         eliminarv.setSelected(false);
         adda.setSelected(false);
     }//GEN-LAST:event_addvMouseClicked
+
+    private void barrades_pMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_barrades_pMouseEntered
+        entrar_b = true;
+    }//GEN-LAST:event_barrades_pMouseEntered
+
+    private void barrades_pMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_barrades_pMouseExited
+        entrar_b = false;
+    }//GEN-LAST:event_barrades_pMouseExited
+
+    private void mapa_pMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mapa_pMouseClicked
+        if (!entrar_b) {
+            if (addv.isSelected() && !asignar_nombre) {
+                int x = evt.getX();
+                int y = evt.getY();
+                Nombre ventana = new Nombre();
+                asignar_nombre = true;
+                ventana.setVisible(true);
+                ventana.setLocation(evt.getXOnScreen() - 349 / 2, evt.getYOnScreen() - 122 / 2);
+                Thread th = new Thread() {
+                    @Override
+                    public void run() {
+                        boolean canDraw = true;
+                        try {
+                            int i = 1;
+                            while (ventana.nombre.equals("")) {
+                                Thread.sleep(i);
+                            }
+                            Vertices[] vert = lugares.getVertices();
+
+                            Vertices prueba = new Vertices(x, y, ventana.nombre.toUpperCase());
+                            try {
+                                for (Vertices vert1 : vert) {
+                                    if (((((prueba.getXi() >= vert1.getXi()) && (prueba.getXi() <= vert1.getXf())) //rango de prueba.xi
+                                            || // o
+                                            ((prueba.getXf() >= vert1.getXi()) && (prueba.getXf() <= vert1.getXf()))) //Rango de prueba.xf
+                                            && // y
+                                            (((prueba.getYi() >= vert1.getYi()) && (prueba.getYi() <= vert1.getYf())) //rango de prueba.yi
+                                            || // o
+                                            ((prueba.getYf() >= vert1.getYi()) && (prueba.getYf() <= vert1.getYf())))) //Rango de prueba.yf
+
+                                            || ((((vert1.getXi() >= prueba.getXi()) && (vert1.getXi() <= prueba.getXf())) //rango de vert1.xi
+                                            || // o
+                                            ((vert1.getXf() >= prueba.getXi()) && (vert1.getXf() <= prueba.getXf()))) //Rango de vert1.xf
+                                            && // y
+                                            (((vert1.getYi() >= prueba.getYi()) && (vert1.getYi() <= prueba.getYf())) //rango de vert1.yi
+                                            || // o
+                                            ((vert1.getYf() >= prueba.getYi()) && (vert1.getYf() <= prueba.getYf())))) //Rango de vert1.yf
+                                            ) {
+                                        JOptionPane.showMessageDialog(null, "La posicion del mouse esta muy cerca a\nun vertice, por favor escoja otra posicion", "Error: posible solapamiento de vertices", 1);
+                                        canDraw = false;
+
+                                    }
+
+                                }
+                            } catch (Exception e) {
+                                if (lugares.getTope() == 0) {
+                                    canDraw = true;
+                                }
+                            }
+                            if (canDraw) {
+                                funciones.Addv(x, y, ventana.nombre.toUpperCase(), lugares);
+                                ini_c.addItem(ventana.nombre.toUpperCase());
+                                fin_c.addItem(ventana.nombre.toUpperCase());
+                                draw.dibujarV(ventana.nombre.toUpperCase(), x, y, mapa_p.getGraphics());
+                            }
+                            barrades_p.repaint();
+                            asignar_nombre = false;
+
+                        } catch (InterruptedException e) {
+                            System.out.println(e);
+                        }
+                    }
+                };
+                th.start();
+
+            } else if (adda.isSelected()) {
+                Vertices vertices[] = lugares.getVertices();
+                if (!click_a && !ponerA) {
+                    int i = 0;
+                    boolean aux = true;
+                    while (i < lugares.getTope() && aux) {
+                        if (vertices[i].getYi() < evt.getY() && vertices[i].getYf() > evt.getY()) {
+                            if (vertices[i].getXi() < evt.getX() && vertices[i].getXf() > evt.getX()) {
+                                xi = evt.getX();
+                                yi = evt.getY();
+                                inicio = vertices[i];
+                                posi = i;
+                                click_a = !click_a;
+                                draw.dibujarVSelect(inicio.getNombre(), inicio.getX(), inicio.getY(), mapa_p.getGraphics());
+                                aux = false;
+                            }
+                        }
+                        i++;
+                    }
+                    if (aux) {
+                        fallos++;
+                        funciones.mensaje_e(fallos);
+                    }
+                } else if (!ponerA) {
+                    int i = 0;
+                    boolean aux = true;
+                    while (i < lugares.getTope() && aux) {
+                        if (vertices[i].getYi() < evt.getY() && vertices[i].getYf() > evt.getY()) {
+                            if (vertices[i].getXi() < evt.getX() && vertices[i].getXf() > evt.getX()) {
+                                xf = evt.getX();
+                                yf = evt.getY();
+                                fin = vertices[i];
+                                posf = i;
+                                aux = false;
+                            }
+                        }
+                        i++;
+                    }
+                    if (aux) {
+                        fallos++;
+                        xi = 0;
+                        yi = 0;
+                        inicio = null;
+                        posi = 0;
+                        barrades_p.repaint();
+                        asignar_nombre = false;
+                        funciones.mensaje_e(fallos);
+                    } else if (fin == inicio) {
+                        mapa_p.repaint();
+                        timer.schedule(new RepeatedTask1(), 10);
+                        xi = 0;
+                        yi = 0;
+                        inicio = null;
+                        posi = 0;
+                    } else {
+                        Costo ventana = new Costo();
+                        ventana.setVisible(true);
+                        ponerA = !ponerA;
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                while (ventana.costo == 0) {
+                                    System.out.println("");
+                                }
+                                if (vertices[posf].getXi() > vertices[posi].getXf()) {
+                                    if (vertices[posf].getYi() < vertices[posi].getYf()) {
+                                        lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXf(), vertices[posi].getYi(), vertices[posf].getXi(), vertices[posf].getYf());
+                                        lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXf(), vertices[posi].getYi(), vertices[posf].getXi(), vertices[posf].getYf());
+                                    } else {
+                                        lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXf(), vertices[posi].getYf(), vertices[posf].getXi(), vertices[posf].getYi());
+                                        lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXf(), vertices[posi].getYf(), vertices[posf].getXi(), vertices[posf].getYi());
+                                    }
+                                } else {
+                                    if (vertices[posf].getYi() < vertices[posi].getYf()) {
+                                        lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXi(), vertices[posi].getYi(), vertices[posf].getXf(), vertices[posf].getYf());
+                                        lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXi(), vertices[posi].getYi(), vertices[posf].getXf(), vertices[posf].getYf());
+                                    } else {
+                                        lugares.addA(ventana.costo, inicio, fin, posi, vertices[posi].getXi(), vertices[posi].getYf(), vertices[posf].getXf(), vertices[posf].getYi());
+                                        lugares.addA(ventana.costo, fin, inicio, posf, vertices[posi].getXi(), vertices[posi].getYf(), vertices[posf].getXf(), vertices[posf].getYi());
+                                    }
+                                }
+                                mapa_p.repaint();
+                                timer.schedule(new RepeatedTask1(), 10);
+                                ponerA = !ponerA;
+                            }
+                        }.start();
+                        fallos = 0;
+                    }
+                    click_a = !click_a;
+                }
+            } else if (eliminarv.isSelected()) {
+                Vertices vertices[] = lugares.getVertices();
+                boolean aux = false;
+                int i = 0;
+                while (i < lugares.getTope() && !aux) {
+                    if (vertices[i].getYi() < evt.getY() && vertices[i].getYf() > evt.getY()) {
+                        if (vertices[i].getXi() < evt.getX() && vertices[i].getXf() > evt.getX()) {
+                            aux = true;
+                        }
+                    }
+                    i++;
+                }
+                if (aux) {
+                    timer.schedule(new RepeatedTask2(vertices[i - 1]), 1);
+                    lugares.eliminarV(i - 1);
+                    ini_c.removeItemAt(i);
+                    fin_c.removeItemAt(i);
+                    timer.schedule(new CleanTimer(), 975);
+                    timer.schedule(new RepeatedTask1(), 1000);
+                }
+            }
+        }
+    }//GEN-LAST:event_mapa_pMouseClicked
+
+    private void camino_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_camino_bActionPerformed
+        if (!ini_c.getSelectedItem().equals(" ") && !fin_c.getSelectedItem().equals(" ")) {
+            Object mats[] = funciones.floyd(lugares.getTope(), lugares.getVertices());
+            ArrayList<Vertices> camino = funciones.caminoMin((int[][]) mats[0], (Vertices[][])mats[1], lugares.getTope(), lugares.getVertices(), funciones.encontrarV((String) ini_c.getSelectedItem(), lugares.getVertices()), funciones.encontrarV((String) fin_c.getSelectedItem(), lugares.getVertices()));
+            draw.dibujarAllV(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
+            draw.dibujarAllA(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
+            draw.dibujarCamino(camino, mapa_p.getGraphics());
+        }
+    }//GEN-LAST:event_camino_bActionPerformed
 
     public class RepeatedTask extends TimerTask {
 
@@ -661,6 +768,8 @@ public class Ventana extends javax.swing.JFrame {
 
         @Override
         public void run() {
+            draw.dibujarAllV(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
+            draw.dibujarAllA(lugares.getVertices(), lugares.getTope(), mapa_p.getGraphics());
             draw.dibujarEliminacion(v, mapa_p.getGraphics());
         }
     }
@@ -691,15 +800,19 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JCheckBox addv;
     private javax.swing.JPanel barra_p;
     private javax.swing.JPanel barrades_p;
+    private javax.swing.JButton camino_b;
     private javax.swing.JLabel desplegable;
     private javax.swing.JPanel desplegable_p;
     private javax.swing.JCheckBox eliminarv;
     private javax.swing.JLabel exit;
     private javax.swing.JPanel exit_p;
+    private javax.swing.JComboBox<String> fin_c;
+    private javax.swing.JComboBox<String> ini_c;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel mapa_p;
     private javax.swing.JScrollPane scroll_p;
     // End of variables declaration//GEN-END:variables
