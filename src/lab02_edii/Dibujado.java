@@ -72,4 +72,11 @@ public class Dibujado {
             dibujarA(a.getXi(), a.getYi(), a.getXf(), a.getYf(), draw);
         }
     }
+    
+    public void dibujarVSelect (String nombre, int x, int y, Graphics draw) {
+        draw.setColor(Color.RED);
+        dibujarV(nombre, x, y, draw);
+    }
+            
+            
 }

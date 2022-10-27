@@ -2,6 +2,7 @@ package lab02_edii;
 
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -31,6 +32,8 @@ public class Ventana extends javax.swing.JFrame {
     int posf, posi;
     //Variable que permite saber si se esta poniendo una arista o no
     boolean ponerA = false;
+
+    boolean checkb_e = false;
 
     boolean asignar_nombre = false;
 
@@ -232,6 +235,11 @@ public class Ventana extends javax.swing.JFrame {
         addv.setForeground(new java.awt.Color(255, 255, 255));
         addv.setText("Agregar vertices");
         addv.setBorder(null);
+        addv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addvMouseClicked(evt);
+            }
+        });
         addv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addvActionPerformed(evt);
@@ -241,6 +249,11 @@ public class Ventana extends javax.swing.JFrame {
         adda.setBackground(new java.awt.Color(158, 118, 118));
         adda.setForeground(new java.awt.Color(255, 255, 255));
         adda.setText("Agregar Arista");
+        adda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addaMouseClicked(evt);
+            }
+        });
 
         jButton1.setText("Mostrar tablas");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -252,6 +265,11 @@ public class Ventana extends javax.swing.JFrame {
         eliminarv.setBackground(new java.awt.Color(158, 118, 118));
         eliminarv.setForeground(new java.awt.Color(255, 255, 255));
         eliminarv.setText("Eliminar vertice");
+        eliminarv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                eliminarvMouseClicked(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -433,28 +451,24 @@ public class Ventana extends javax.swing.JFrame {
         if (addv.isSelected() && !asignar_nombre) {
             int x = evt.getX();
             int y = evt.getY();
-            Nombre ventana = new Nombre();
-            asignar_nombre = true;
-            ventana.setVisible(true);
-            ventana.setLocation(evt.getXOnScreen() - 349 / 2, evt.getYOnScreen() - 122 / 2);
             Vertices[] vert = lugares.getVertices();
             boolean canDraw = false;
-            try {
-                for (Vertices vert1 : vert) {
-                    if ((x >= vert1.getLimXi()) && (x <= vert1.getLimXf()) && (y <= vert1.getLimYf()) && (y >= vert1.getLimYi())) {
-                        break; //Esta dentro de los límites, por lo que no se dibuja
-                    } else {
-                        canDraw = true;
-                    }
-                }
-            } catch (java.lang.NullPointerException e) {
-                if (lugares.getTope() == 0) {
+            int z = 0;
+            if (lugares.getTope() == 0) {
+                canDraw = true;
+            }
+            while (!canDraw && z < lugares.getTope()) {
+                if ((x >= vert[z].getLimXi()) && (x <= vert[z].getLimXf()) && (y <= vert[z].getLimYf()) && (y >= vert[z].getLimYi())) {
+                } else {
                     canDraw = true;
                 }
+                z++;
             }
-
             if (canDraw) {
-
+                Nombre ventana = new Nombre();
+                asignar_nombre = true;
+                ventana.setVisible(true);
+                ventana.setLocation(evt.getXOnScreen() - 349 / 2, evt.getYOnScreen() - 122 / 2);
                 Thread th = new Thread() {
                     @Override
                     public void run() {
@@ -467,7 +481,6 @@ public class Ventana extends javax.swing.JFrame {
                             draw.dibujarV(ventana.nombre.toUpperCase(), x, y, mapa_p.getGraphics());
                             barrades_p.repaint();
                             asignar_nombre = false;
-
                         } catch (InterruptedException e) {
                             System.out.println(e);
                         }
@@ -491,6 +504,7 @@ public class Ventana extends javax.swing.JFrame {
                             inicio = vertices[i];
                             posi = i;
                             click_a = !click_a;
+                            draw.dibujarVSelect(inicio.getNombre(), inicio.getX(), inicio.getY(), mapa_p.getGraphics());
                             aux = false;
                         }
                     }
@@ -596,6 +610,21 @@ public class Ventana extends javax.swing.JFrame {
         tb.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void eliminarvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eliminarvMouseClicked
+        adda.setSelected(false);
+        addv.setSelected(false);
+    }//GEN-LAST:event_eliminarvMouseClicked
+
+    private void addaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addaMouseClicked
+        eliminarv.setSelected(false);
+        addv.setSelected(false);
+    }//GEN-LAST:event_addaMouseClicked
+
+    private void addvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addvMouseClicked
+        eliminarv.setSelected(false);
+        adda.setSelected(false);
+    }//GEN-LAST:event_addvMouseClicked
+
     public class RepeatedTask extends TimerTask {
 
         int xf, yf;
@@ -647,6 +676,11 @@ public class Ventana extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                try {
+                    UIManager.setLookAndFeel(new WindowsLookAndFeel());
+                } catch (UnsupportedLookAndFeelException ex) {
+                    Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 new Ventana().setVisible(true);
             }
         });
